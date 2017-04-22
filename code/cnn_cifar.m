@@ -29,7 +29,7 @@ opts.train.continue = true ;
 % use the GPU to train
 opts.train.useGpu = false ;
 % set the learning rate
-opts.train.learningRate = [0.001*ones(1, 15) 0.0001*ones(1,10)] ;
+opts.train.learningRate = [0.001*ones(1, 10) 0.0001*ones(1,10) 0.00001*ones(1, 5)] ;
 % set weight decay
 opts.train.weightDecay = 0.0005 ;
 % set momentum
