@@ -23,13 +23,13 @@ opts.imdbPath = fullfile(opts.expDir, 'imdb.mat');
 % set up the batch size (split the data into batches)
 opts.train.batchSize = 100 ;
 % number of Epoch (iterations)
-opts.train.numEpochs = 25 ;
+opts.train.numEpochs = 30 ;
 % resume the train
 opts.train.continue = true ;
 % use the GPU to train
 opts.train.useGpu = false ;
 % set the learning rate
-opts.train.learningRate = [0.001*ones(1, 10) 0.0001*ones(1,10) 0.00001*ones(1, 5)] ;
+opts.train.learningRate = [0.001*ones(1, 10) 0.0001*ones(1,10) 0.00001*ones(1,10)] ;
 % set weight decay
 opts.train.weightDecay = 0.0005 ;
 % set momentum
@@ -152,7 +152,7 @@ net.layers{end+1} = struct('type', 'relu','leak',0) ;
 %                           'pad', 0,...
 %                           'opts',{{}}) ; 
 
-net.layers{end+1} = struct('type', 'dropout', 'rate', 0.25);
+net.layers{end+1} = struct('type', 'dropout', 'rate', 0.3);
 
 % 6 conv5
 net.layers{end+1} = struct('type', 'conv', ...
