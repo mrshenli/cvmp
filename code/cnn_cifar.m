@@ -29,7 +29,7 @@ opts.train.continue = true ;
 % use the GPU to train
 opts.train.useGpu = false ;
 % set the learning rate
-opts.train.learningRate = [0.001*ones(1, 15) 0.0001*ones(1,8)  0.00001*ones(1, 7)]
+opts.train.learningRate = [0.001*ones(1, 20) 0.0001*ones(1,10)  0.00001*ones(1, 5)]
 % set weight decay
 opts.train.weightDecay = 0.0005 ;
 % set momentum
@@ -53,7 +53,7 @@ net.layers = {} ;
 
 % 1 conv1
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{1e-4*randn(3,3,3,32, 'single'), zeros(1, 32, 'single')}}, ...
+                           'weights', {{1e-4*randn(3,3,3,64, 'single'), zeros(1, 64, 'single')}}, ...
                            'learningRate',[1,2],...
 			   'dilate', 1, ...
                            'stride', 2, ...
@@ -83,7 +83,7 @@ net.layers{end+1} = struct('type', 'pool', ...
 
 % 3 conv2
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{0.01*randn(3,3,32,32, 'single'), zeros(1, 32, 'single')}}, ...
+                           'weights', {{0.01*randn(3,3,64,64, 'single'), zeros(1, 64, 'single')}}, ...
                            'learningRate',[1,2],...
                            'dilate', 1, ...
                            'stride', 1, ...
@@ -114,7 +114,7 @@ net.layers{end+1} = struct('type', 'pool', ...
 %net.layers{end+1} = struct('type', 'dropout', 'rate', 0.25);
 
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{0.01*randn(3,3,32,32, 'single'), zeros(1, 32, 'single')}}, ...
+                           'weights', {{0.01*randn(3,3,64,128, 'single'), zeros(1, 128, 'single')}}, ...
                            'learningRate',[1,2],...
                            'dilate', 1, ...
                            'stride', 1, ...
@@ -134,7 +134,7 @@ net.layers{end+1} = struct('type', 'relu','leak',0) ;
 
 
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{0.01*randn(3,3,32,64, 'single'), zeros(1, 64, 'single')}}, ...
+                           'weights', {{0.01*randn(3,3,128,256, 'single'), zeros(1, 256, 'single')}}, ...
                            'learningRate',[1,2],...
                            'dilate', 1, ...
                            'stride', 1, ...
@@ -152,11 +152,11 @@ net.layers{end+1} = struct('type', 'relu','leak',0) ;
 %                           'pad', 0,...
 %                           'opts',{{}}) ; 
 
-net.layers{end+1} = struct('type', 'dropout', 'rate', 0.2);
+net.layers{end+1} = struct('type', 'dropout', 'rate', 0.25);
 
 % 6 conv5
 net.layers{end+1} = struct('type', 'conv', ...
-                           'weights', {{0.1*randn(2,2,64,100, 'single'), zeros(1, 100, 'single')}}, ...
+                           'weights', {{0.1*randn(2,2,256,100, 'single'), zeros(1, 100, 'single')}}, ...
                            'learningRate',[1,2],...
                            'dilate', 1, ...
                            'stride', 1, ...
@@ -212,7 +212,7 @@ function [im, labels] = getBatch(imdb, batch , set)
 % --------------------------------------------------------------------
 im = imdb.images.data(:,:,:,batch) ;
 % data augmentation
-%if set == 1 % training
+if set == 1 % training
     % fliplr
         
     % noise
@@ -220,44 +220,6 @@ im = imdb.images.data(:,:,:,batch) ;
     % random crop
     
     % and other data augmentation
-%end
-
-
-%if set ~= 3
-%    labels = imdb.images.labels(1,batch) ;
-%end
-
-% data augmentation
-if set == 1 % training
-    total = size(batch, 2);
-    % fliplr
-    im_1 = zeros(size(im));
-    for i = 1:total
-        p = rand(1);
-        if (p > 0.2)
-            im(:,:,:,i) = fliplr(im(:,:,:,i));
-        end
-    end
-     % rotate
-     for i = 1:total
-         p = rand(1);
-         if (p > 0.2)
-             im_2(:,:,:,i) = imrotate(im(:,:,:,i), 10, 'crop');
-         end
-     end            
-     % random crop
-     for i = 1:total
-         p = rand(1);
-         if (p > 0.2)
-             x = randi(round(0.1 * size(im, 1)));
-             y = randi(round(0.1 * size(im, 2)));
-             tmp = imresize(im(:,:,:,i), 1.1);
-             tmp = imcrop(tmp, [x y size(im,1)-1 size(im,2)-1]);
-             im_3(:,:,:,i) = tmp;
-         end
-     end      
-     
-     % and other data augmentation
 end
 
 
